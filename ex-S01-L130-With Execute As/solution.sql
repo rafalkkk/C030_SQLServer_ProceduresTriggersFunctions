@@ -1,0 +1,22 @@
+CREATE OR ALTER PROCEDURE Sales.GetSalesInfo
+AS
+BEGIN
+	SELECT ClientId, COUNT(*) 
+	FROM Sales.ShopOrder
+	GROUP BY ClientId
+END
+GO
+
+
+CREATE USER frank WITHOUT LOGIN;
+CREATE ROLE accounting;
+ALTER ROLE accounting ADD MEMBER frank;
+GRANT EXECUTE ON SCHEMA::Sales TO accounting;
+
+
+EXECUTE AS USER='frank';
+SELECT USER_NAME();
+EXEC Sales.GetSalesInfo;
+SELECT * FROM Sales.ShopOrder;
+REVERT;
+

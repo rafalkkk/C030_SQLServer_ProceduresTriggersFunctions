@@ -1,0 +1,26 @@
+CREATE SCHEMA reporting;
+GO
+
+CREATE USER betty WITHOUT LOGIN; 
+GO
+
+CREATE OR ALTER FUNCTION reporting.who_am_i()
+RETURNS SYSNAME
+AS
+BEGIN
+	RETURN USER_NAME();
+END
+GO
+
+EXECUTE AS USER = 'betty';
+SELECT reporting.who_am_i();
+REVERT;
+GO
+
+GRANT EXECUTE ON SCHEMA::reporting TO betty;
+GO
+
+EXECUTE AS USER = 'betty';
+SELECT reporting.who_am_i();
+REVERT;
+GO
